@@ -3,6 +3,7 @@ package com.e.kawal_covid.Views;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mTotalDataPositif;
     @BindView(R.id.lblTtlDataSembuh)
     TextView mTotalDataSembuh;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout mRefresh;
 
     private AllDataViewModel mViewModel;
 
@@ -77,6 +80,18 @@ public class MainActivity extends AppCompatActivity {
         mViewModel.getDataGlobal().observe(this, new Observer<List<ItemGlobalModel>>() {
             @Override
             public void onChanged(List<ItemGlobalModel> itemGlobalModels) {
+            }
+        });
+
+        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mViewModel.fetchDataGlobal();
+                mViewModel.fetDataNegara();
+                mViewModel.fetDataSembuh();
+                mViewModel.fetDataMeninggal();
+                mViewModel.fetDataPositif();
+                mRefresh.setRefreshing(false);
             }
         });
 
